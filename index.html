@@ -32,17 +32,22 @@
             width: calc(100% / 7);
             font-weight: bold;
             vertical-align: middle;
-            text-align: center;
+            text-align: right;
+            padding-right: 20pt;
         }
 
         .upperfirst {
             text-transform: capitalize;
         }
 
-        .monthname {
+        .header {
             padding: 10pt;
             font-size: 40pt;
             font-weight: bold;
+        }
+
+        .weekday {
+            font-size: 20pt;
         }
 
         .othermonth {
@@ -79,12 +84,13 @@
                 
                 let tmp = "<table>";
                 tmp += "<tr>";
-                tmp += "<th colspan=7 class='monthname upperfirst'>" + nameOfMonth + "</th>";
+                tmp += "<th colspan=4 class='header upperfirst' align=left>" + nameOfMonth + "</th>";
+                tmp += "<th colspan=3 class='header' align=right>" + startOfMonth.getFullYear() + "</th>";
                 tmp += "</tr>";
 
                 tmp += "<tr>";
                 for(let j = 0; j < 7; j++) {
-                    tmp += "<th class='upperfirst'>" + new Date(2024, 0, j + 1).toLocaleString('default', { weekday: 'long' }) + "</th>";
+                    tmp += "<th class='upperfirst weekday'>" + new Date(2024, 0, j + 1).toLocaleString('default', { weekday: 'long' }) + "</th>";
                 }
                 tmp += "</tr>";
 
