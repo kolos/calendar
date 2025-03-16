@@ -23,13 +23,16 @@
             border: 1pt solid #000;
         }
         th, td {
-            border: 1pt solid #000;
+            border-top: 1pt solid #000;
+            border-bottom: 1pt solid #000;
         }
 
         td{
             font-size: 60pt;
             width: calc(100% / 7);
             font-weight: bold;
+            vertical-align: middle;
+            text-align: center;
         }
 
         .upperfirst {
@@ -45,9 +48,29 @@
         .othermonth {
             color: #eee;
         }
+
+        .saturday.thismonth {
+            color: #606060;
+        }
+
+        .sunday.thismonth, .holiday.thismonth  {
+            color: #f00;
+        }
     </style>
     <script>
+        let holidays = [];
         window.onload = function() {
+            fetch('https://date.nager.at/api/v3/PublicHolidays/2025/HU')
+                .then(response => response.json())
+                .then(data => {
+                    holidays = data.map(h => new Date(h.date).toDateString());
+                })
+                .finally(() => {
+                    renderCalendar();
+                });
+        };
+
+        var renderCalendar = function() {
             let month = "";
             for(let i = 0; i < 12; i++) {
                 const startOfMonth = new Date(new Date().getFullYear(), i, 1);
@@ -69,8 +92,17 @@
                     tmp += "<tr>";
                     for(let k = 0; k < 7; k++) {
                         const date = new Date(startOfMonth.getFullYear(), i, (j * 7 + k +1) - dayOffset);
-                        const monthClass = date.getMonth() == i ? "thismonth" : "othermonth";
-                        tmp += "<td valign='middle' align='center' class='" + monthClass + "'>" + date.getDate() + "</td>";
+                        let dayClass = date.getMonth() == i ? "thismonth" : "othermonth";
+                        if(k == 5) {
+                            dayClass += " saturday";
+                        }
+                        if(k == 6) {
+                            dayClass += " sunday";
+                        }
+                        if(holidays.includes(date.toDateString())) {
+                            dayClass += " holiday";
+                        }
+                        tmp += "<td class='" + dayClass + "'>" + date.getDate() + "</td>";
                     }
                     tmp += "</tr>";
                 }
@@ -79,7 +111,7 @@
                 month += tmp;
             }
             document.body.innerHTML = month;
-        };
+        }
     </script>
 </head>
 <body>
