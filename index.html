@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Calendar</title>
+    <style>
+        @media print{
+            @page {
+                size: A4 landscape;
+                margin: 0.5cm 0 0.5cm 0;
+            }
+        }
+
+        table {
+            margin:10px 0 10px 0;
+            width: 100%;
+            height: 100%;
+            page-break-after: always;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 26pt;
+            border-collapse: collapse;
+            border: 1pt solid #000;
+        }
+        th, td {
+            border: 1pt solid #000;
+        }
+
+        td{
+            font-size: 60pt;
+            width: calc(100% / 7);
+            font-weight: bold;
+        }
+
+        .upperfirst {
+            text-transform: capitalize;
+        }
+
+        .monthname {
+            padding: 10pt;
+            font-size: 40pt;
+            font-weight: bold;
+        }
+
+        .othermonth {
+            color: #eee;
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            let month = "";
+            for(let i = 0; i < 12; i++) {
+                const startOfMonth = new Date(new Date().getFullYear(), i, 1);
+                const nameOfMonth = startOfMonth.toLocaleString('default', { month: 'long' });
+                const dayOffset = (startOfMonth.getDay() + 6) % 7;
+                
+                let tmp = "<table>";
+                tmp += "<tr>";
+                tmp += "<th colspan=7 class='monthname upperfirst'>" + nameOfMonth + "</th>";
+                tmp += "</tr>";
+
+                tmp += "<tr>";
+                for(let j = 0; j < 7; j++) {
+                    tmp += "<th class='upperfirst'>" + new Date(2024, 0, j + 1).toLocaleString('default', { weekday: 'long' }) + "</th>";
+                }
+                tmp += "</tr>";
+
+                for(let j = 0; j < 6; j++) {
+                    tmp += "<tr>";
+                    for(let k = 0; k < 7; k++) {
+                        const date = new Date(startOfMonth.getFullYear(), i, (j * 7 + k +1) - dayOffset);
+                        const monthClass = date.getMonth() == i ? "thismonth" : "othermonth";
+                        tmp += "<td valign='middle' align='center' class='" + monthClass + "'>" + date.getDate() + "</td>";
+                    }
+                    tmp += "</tr>";
+                }
+                tmp += "</table>";
+
+                month += tmp;
+            }
+            document.body.innerHTML = month;
+        };
+    </script>
+</head>
+<body>
+</body>
+</html>
